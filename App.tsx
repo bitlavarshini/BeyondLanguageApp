@@ -3,15 +3,19 @@ import { TextInput, Button, View, Text, TouchableOpacity, StyleSheet, Alert } fr
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile} from "firebase/auth";
+import { getFirestore, addDoc, collection, getDocs  } from "firebase/firestore";
+
 
 const firebaseConfig = {
-  // ToDo: Add Firebase Configuration
-};
+
+                      };
 
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
+const db = getFirestore(app);
+
 
 function HomeScreen({ navigation }) {
   return (
@@ -34,10 +38,72 @@ function SelectLanguage({ navigation }) {
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Button
         title="Spanish"
-        onPress={() => navigation.navigate('Spanish')}
+//         onPress={() => navigation.navigate('Spanish')}
+        onPress={() => navigation.navigate('GetUserInfo')}
       />
     </View>
   );
+}
+
+const questionnaire = [
+    {
+      question: 'What is your current proficiency?',
+      options: ['Beginner', 'Intermediate', 'Expert'],
+    },
+    {
+      question: 'What is your motivation?',
+      options: ['School or Exam', 'Family/Friends or Community', 'Career or Business', 'Travel'],
+    },
+    {
+      question: 'What is your age?',
+      options: ['under 18', '18-25', '25-40', '40+'],
+    }
+  ];
+
+function GetUserInfo({ navigation }){
+ const [userQuestionnaireCompleted, setQuestionnaireCompleted] = useState(false);
+ const [currentQuestionnaireIndex, setCurrentQuestionnaireIndex] = useState(0);
+ let questionnaireMap = new Map<string, string>();
+
+ const handleAnswer = (selectedOption) => {
+     const currentQuestion =  questionnaire[currentQuestionnaireIndex];
+     questionnaireMap.set(currentQuestion, selectedOption)
+     if (currentQuestionnaireIndex ===  questionnaire.length - 1) {
+           setQuestionnaireCompleted(true);
+     } else {
+       setCurrentQuestionnaireIndex(currentQuestionnaireIndex + 1);
+     }
+   };
+   questionnaireMap.set("email", auth.currentUser.email);
+//    try {
+//      const docRef = addDoc(collection(db, "users"), questionnaireMap);
+//
+//      console.log("Document written with ID: ", docRef.id);
+//    } catch (e) {
+//      console.error("Error adding document: ", e);
+//    }
+   return (
+   <View>
+   {!userQuestionnaireCompleted ? (
+ <View>
+           <Text>Question {currentQuestionnaireIndex + 1}</Text>
+           <Text>{questionnaire[currentQuestionnaireIndex].question}</Text>
+           {questionnaire[currentQuestionnaireIndex].options.map((option, index) => (
+             <TouchableOpacity key={index} onPress={() => handleAnswer(option)}>
+               <Text>{option}</Text>
+             </TouchableOpacity>
+           ))}
+ </View>
+         ) : (
+         <View>
+                   <Text>Congratulations! You completed the questionnaire.</Text>
+                   <Button title="Proceed to Exercises" onPress={() => navigation.navigate('Spanish')}/>
+         </View>
+
+         )}
+     </View>
+   );
+
 }
 
 function SignUp({ navigation }) {
@@ -49,6 +115,7 @@ createUserWithEmailAndPassword(auth, email, password)
   .then((userCredential) => {
     const user = userCredential.user;
     Alert.alert('Sign Up Successful');
+    navigation.navigate("SignIn")
   })
   .catch((error) => {
     const errorMessage = error.message;
@@ -248,6 +315,7 @@ function App() {
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SelectLanguage" component={SelectLanguage} />
         <Stack.Screen name="Spanish" component={Spanish} />
+        <Stack.Screen name="GetUserInfo" component={GetUserInfo} />
         <Stack.Screen name="Quiz" component={Quiz} />
       </Stack.Navigator>
     </NavigationContainer>
