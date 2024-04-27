@@ -8,7 +8,7 @@ import { getDatabase, ref, get, child, set, onValue } from "firebase/database";
 import Flashcard from './Flashcard'
 
 const firebaseConfig = {
-  // Todo : Add firebase config
+  // Todo : Add Firebase Config
 };
 
 const app = initializeApp(firebaseConfig);
@@ -137,7 +137,12 @@ function SelectLanguage({ navigation }) {
             get(child(dbRef, `Users/${subEmail}`))
               .then((snapshot) => {
                 trackLevel = snapshot.val();
+                console.log(trackLevel)
+                if (trackLevel.level == 0) {
+                navigation.navigate('GetUserInfo', { trackLevel: trackLevel, subEmail: subEmail})
+                } else {
                 navigation.navigate('Levels', { trackLevel: trackLevel, subEmail: subEmail})
+                }
               })
               .catch((error) => {
                 console.error('Error reading data:', error);
@@ -154,15 +159,105 @@ function SelectLanguage({ navigation }) {
   );
 }
 
+// const questionnaire = [
+//     {
+//       question: 'What is your current proficiency?',
+//       options: ['Beginner', 'Intermediate', 'Expert'],
+//     },
+//     {
+//       question: 'What is your motivation?',
+//       options: ['School or Exam', 'Family/Friends or Community', 'Career or Business', 'Travel'],
+//     },
+//     {
+//       question: 'What is your age?',
+//       options: ['under 18', '18-25', '25-40', '40+'],
+//     }
+//   ];
+// set(ref(getDatabase(), 'Questionnaire/'), questionnaire);
+
+let questionnaire = [];
+
+get(child(dbRef, `Questionnaire/`))
+  .then((snapshot) => {
+    questionnaire = snapshot.val();
+  })
+  .catch((error) => {
+    console.error('Error reading data:', error);
+  });
+
+let questionnaireSelected = []
+function GetUserInfo({ navigation }) {
+const route = useRoute()
+  const subEmail = route.params?.subEmail
+  let trackLevel = route.params?.trackLevel
+  const path = 'UsersData/' + subEmail;
+
+  const [quizCompleted, setQuizCompleted] = useState(false);
+
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  const handleAnswer = (selectedOption) => {
+    const currentQuestion = questionnaire[currentQuestionIndex];
+    const cq = currentQuestion.question
+    questionnaireSelected.push({cq, selectedOption})
+
+
+    if (currentQuestionIndex === questionnaire.length - 1) {
+      setQuizCompleted(true);
+    } else {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
+
+          const handleLast = async () => {
+                set(ref(getDatabase(), path), questionnaireSelected);
+                questionnaireSelected = []
+                if (trackLevel.level == 0) {
+                    trackLevel = {
+                                          level : 1
+                                        }
+                          set(ref(getDatabase(), 'Users/' + subEmail), trackLevel);
+                          }
+          };
+
+          useEffect(() => {
+              if (quizCompleted) {
+                handleLast();
+              }
+            }, [quizCompleted]);
+
+  return (
+    <View>
+      {!quizCompleted ? (
+        <View>
+          <Text>Question {currentQuestionIndex + 1}</Text>
+          <Text>{questionnaire[currentQuestionIndex].question}</Text>
+          {questionnaire[currentQuestionIndex].options.map((option, index) => (
+            <TouchableOpacity key={index} onPress={() => handleAnswer(option)}>
+              <Text>{option}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        ) : (
+        <View>
+                                  <Text>Congratulations! You completed the questionnaire.</Text>
+                                                     <Button title="Proceed to Exercises"
+                                                     onPress={() => navigation.navigate('Levels', { trackLevel: trackLevel, subEmail: subEmail})}/>
+                                </View>
+      )}
+    </View>
+  );
+}
+
 function Levels({ navigation }) {
 const route = useRoute()
 const subEmail = route.params?.subEmail
   let trackLevel = route.params?.trackLevel
 const path = 'Users/' + subEmail;
     const handleLevel1 = async () => {
-    if (trackLevel.level == 0) {
+    if (trackLevel.level == 1) {
     trackLevel = {
-                          level : 1
+                          level : 2
                         }
           set(ref(getDatabase(), path), trackLevel);
           }
@@ -170,9 +265,9 @@ const path = 'Users/' + subEmail;
     };
 
     const handleLevel2 = async () => {
-    if(trackLevel.level == 2) {
+    if(trackLevel.level == 3) {
         trackLevel = {
-                              level : 3
+                              level : 4
                             }
               set(ref(getDatabase(), path), trackLevel);
               }
@@ -180,9 +275,9 @@ const path = 'Users/' + subEmail;
         };
 
         const handleQuiz = async () => {
-            if(trackLevel.level == 4) {
+            if(trackLevel.level == 5) {
                 trackLevel = {
-                                      level : 5
+                                      level : 6
                                     }
                       set(ref(getDatabase(), path), trackLevel);
                       }
@@ -226,24 +321,24 @@ const route = useRoute()
 let trackLevel = route.params?.trackLevel
 const subEmail = route.params?.subEmail
 let text = null;
-  if (trackLevel.level == 0) {
+  if (trackLevel.level == 1) {
     text = "Didn't Make Any Progress Yet, Please Start Practicing Levels"
   } else
-  if (trackLevel.level == 1) {
+  if (trackLevel.level == 2) {
     text = "You are on Level 1"
   } else
-  if (trackLevel.level == 2) {
+  if (trackLevel.level == 3) {
   text = "Completed Level 1. Start Level 2"
   } else
-  if (trackLevel.level == 3) {
+  if (trackLevel.level == 4) {
   text = "Finished Level 1. You are on Level 2"
   } else
-  if (trackLevel.level == 4) {
+  if (trackLevel.level == 5) {
         text = "Completed Level 1 and Level 2. Start Quiz"
   } else
-  if (trackLevel.level == 5) {
+  if (trackLevel.level == 6) {
         text = "You are solving quiz"
-  } else if (trackLevel.level == 6) {
+  } else if (trackLevel.level == 7) {
                  text = "Quiz Completed"
            } else {
   text = "Error"
@@ -266,15 +361,25 @@ get(child(dbRef, `Spanish/`))
   });
 
 // const spanish = {
-//   level1: [
-//     { id: 1, word: 'hola', translation: 'hello' },
-//     { id: 2, word: 'adiós', translation: 'goodbye' },
-//   ],
-//   level2: [
-//     { id: 1, word: 'amigo', translation: 'friend' },
-//     { id: 2, word: 'gracias', translation: 'thank you' },
-//   ],
-// };
+//                       level1: [
+//                         { id: 1, word: 'Hola', translation: 'Hello' },
+//                         { id: 2, word: 'Casa', translation: 'House' },
+//                    	 { id: 3, word: 'Perro', translation: 'Dog' },
+//                    	 { id: 4, word: 'Gato', translation: 'Cat' },
+//                         { id: 5, word: 'Comida', translation: 'Food' },
+//                    	 { id: 6, word: 'Agua', translation: 'Water' },
+//                    	 { id: 7, word: 'Amigo', translation: 'Friend' },
+//                       ],
+//                       level2: [
+//                         { id: 1, word: 'Viaje', translation: 'Trip' },
+//                         { id: 2, word: 'Felicidad', translation: 'Happiness' },
+//                    	 { id: 3, word: 'Trabajo', translation: 'Work' },
+//                         { id: 4, word: 'Pasatiempo', translation: 'Hobby' },
+//                    	 { id: 5, word: 'Música', translation: 'Music' },
+//                         { id: 6, word: 'Naturaleza', translation: 'Nature' },
+//                    	 { id: 7, word: 'Familia', translation: 'Family' },
+//                       ],
+//                    };
 //  set(ref(getDatabase(), 'Spanish/'), spanish);
 
 function Level1({ navigation }) {
@@ -287,9 +392,9 @@ let trackLevel = route.params?.trackLevel
 const path = 'Users/' + subEmail;
 
   const handleLevel = async () => {
-  if (trackLevel.level == 1) {
+  if (trackLevel.level == 2) {
     trackLevel = {
-                        level : 2
+                        level : 3
                       }
           set(ref(getDatabase(), path), trackLevel);
           }
@@ -327,9 +432,9 @@ function Level2({ navigation }) {
   const path = 'Users/' + subEmail
 
 const handleLevel = async () => {
-if (trackLevel.level == 3) {
+if (trackLevel.level == 4) {
   trackLevel = {
-                      level : 4
+                      level : 5
                     }
         set(ref(getDatabase(), path), trackLevel);
         }
@@ -370,22 +475,57 @@ get(child(dbRef, `Questions/`))
   });
 
 // const question = [
-//     {
-//       question: 'What is the capital of France?',
-//       options: ['Paris', 'London', 'Berlin', 'Madrid'],
-//       correctAnswer: 'Paris'
-//     },
-//     {
-//       question: 'Which planet is known as the Red Planet?',
-//       options: ['Mars', 'Venus', 'Jupiter', 'Saturn'],
-//       correctAnswer: 'Mars'
-//     },
-//     {
-//       question: 'Who wrote the famous play "Romeo and Juliet"?',
-//       options: ['William Shakespeare', 'Jane Austen', 'Charles Dickens', 'Mark Twain'],
-//       correctAnswer: 'William Shakespeare'
-//     }
-//   ];
+//                         {
+//                           question: 'What does "Agua" mean in English?',
+//                           options: ['House', 'Food', 'Water', 'Friend'],
+//                           correctAnswer: 'Water'
+//                         },
+//                         {
+//                           question: 'Translate the word "Amigo" to English.',
+//                           options: ['Dog', 'Friend', 'School', 'Happy'],
+//                           correctAnswer: 'Friend'
+//                         },
+//                         {
+//                           question: 'What does "Viaje" mean in English?',
+//                           options: ['Work', 'Trip', 'Music', 'Adventure'],
+//                           correctAnswer: 'Trip'
+//                         },
+//                     	{
+//                           question: 'Translate the word "Felicidad" to English.',
+//                           options: ['Nature', 'Happiness', 'Family', 'School'],
+//                           correctAnswer: 'Happiness'
+//                         },
+//                     	{
+//                           question: 'What does "Comida" mean in English?',
+//                           options: ['Water', 'Food', 'Cat', 'Happy'],
+//                           correctAnswer: 'Food'
+//                         },
+//                         {
+//                           question: 'Translate the word "Trabajo" to English.',
+//                           options: ['Work', 'Experience', 'Adventure', 'Future'],
+//                           correctAnswer: 'Work'
+//                         },
+//                         {
+//                           question: 'Translate the word "Jugar" to English.',
+//                           options: ['To play', 'House', 'Friend', 'Nature'],
+//                           correctAnswer: 'To play'
+//                         },
+//                     	{
+//                           question: 'What does "Familia" mean in English?',
+//                           options: ['Experience', 'Family', 'Music', 'Water'],
+//                           correctAnswer: 'Family'
+//                         },
+//                     	{
+//                           question: 'What does "Música" mean in English?',
+//                           options: ['Happy', 'Music', 'School', 'Future'],
+//                           correctAnswer: 'Music'
+//                         },
+//                     	{
+//                           question: 'Translate the word "Gato" to English.',
+//                           options: ['Cat', 'Dog', 'Adventure', 'Trip'],
+//                           correctAnswer: 'Cat'
+//                         },
+//                     ];
 //  set(ref(getDatabase(), 'Questions/'), question);
 
 function Quiz({ navigation }) {
@@ -402,7 +542,7 @@ function Quiz({ navigation }) {
     }
     if (currentQuestionIndex === questions.length - 1) {
       setScore(score + 1);
-      setQuizCompleted(true);
+      setQuizCompleted(true)
     } else {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
@@ -426,9 +566,9 @@ function Quiz({ navigation }) {
 
       const path = 'Users/' + subEmail;
           const handleLast = async () => {
-          if (trackLevel.level == 5) {
+          if (trackLevel.level == 6) {
           trackLevel = {
-                                level : 6
+                                level : 7
                               }
                 set(ref(getDatabase(), path), trackLevel);
                 }
@@ -474,6 +614,7 @@ function App() {
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SelectLanguage" component={SelectLanguage} />
+        <Stack.Screen name="GetUserInfo" component={GetUserInfo} />
         <Stack.Screen name="Levels" component={Levels} />
         <Stack.Screen name="TrackProgress" component={TrackProgress} />
         <Stack.Screen name="Level1" component={Level1} />
