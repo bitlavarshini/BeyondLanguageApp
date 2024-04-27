@@ -1,0 +1,214 @@
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Input, NativeBaseProvider, Button, Icon, Box, Image, AspectRatio } from 'native-base';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { alignContent, flex, flexDirection, width } from 'styled-system';
+import {  Dimensions } from 'react-native';
+
+function Homepage() {
+    const navigation = useNavigation();
+    const DeviceWidth = Dimensions.get('window').width
+  return (
+    <View>
+      <View style={styles.Middle}>
+        <Text style={styles.titleText}>BeyondLanguage</Text>
+      </View>
+      <View style={{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }}>
+    <View style={{
+      flexDirection: 'row'}}>
+      <View>
+        <View style={{width: DeviceWidth*0.5, height: DeviceWidth*0.5, marginBottom:1}}>
+        <TouchableOpacity style={{ width: "100%", alignItems: 'center' }} onPress={() => navigation.navigate("Progress")} >
+        <Image           
+            roundedTop="lg"
+            source={require('../assets/rides.png')}
+            alt="image"
+            height={100}
+            width={100}
+          />
+          <Text>Rides Sharing</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{width: DeviceWidth*0.5, height: DeviceWidth*0.5, marginBottom:1}}>
+        <TouchableOpacity style={{ width: "100%", alignItems: 'center' }} onPress={() => navigation.navigate("Progress")} >
+        <Image           
+            roundedTop="lg"
+            source={require('../assets/marketplace.jpg')}
+            alt="image"
+            height={100}
+            width={100}
+          />
+          <Text>LU Market</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{width: DeviceWidth*0.5, height: DeviceWidth*0.5}}>
+        <TouchableOpacity style={{ width: "100%", alignItems: 'center' }} onPress={() => navigation.navigate("Progress")} >
+        <Image           
+            roundedTop="lg"
+            source={require('../assets/events.png')}
+            alt="image"
+            height={100}
+            width={100}
+          />
+          <Text>Events Around</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View>
+        <View style={{width: DeviceWidth*0.5, height: DeviceWidth*0.5, marginBottom:1, marginLeft:1}}>
+        <TouchableOpacity style={{ width: "100%", alignItems: 'center' }} onPress={() => navigation.navigate("Progress")} >
+        <Image           
+            roundedTop="lg"
+            source={require('../assets/accomodation.png')}
+            alt="image"
+            height={100}
+            width={100}
+          />
+          <Text>Accomodation</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{width: DeviceWidth*0.5, height: DeviceWidth*0.5, marginBottom:1, marginLeft:1}}>
+        <TouchableOpacity style={{ width: "100%", alignItems: 'center' }} onPress={() => navigation.navigate("Progress")} >
+        <Image           
+            roundedTop="lg"
+            source={require('../assets/chat.png')}
+            alt="image"
+            height={100}
+            width={100}
+          />
+          <Text>Chat</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{width: DeviceWidth*0.5, height: DeviceWidth*0.5, marginLeft:1}}>
+        <TouchableOpacity style={{ width: "100%", alignItems: 'center' }} onPress={() => navigation.navigate("Progress")} > 
+        <Image           
+            roundedTop="lg"
+            source={require('../assets/emergency.png')}
+            alt="image"
+            height={100}
+            width={100}
+          />
+          <Text>Emergency Help</Text>
+          </TouchableOpacity>
+        </View>
+      </View>    
+    </View>
+  </View>
+ 
+    </View>
+    
+  )
+}
+export default () => {
+    return (
+      <NativeBaseProvider>
+       
+          <Homepage />
+        
+      </NativeBaseProvider>
+    )
+  }
+  
+  
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+    },
+    LoginText: {
+      marginTop:100,
+      fontSize:30,
+      fontWeight:'bold',
+    },
+    Top:{
+        alignItems:'top',
+        justifyContent:'center',
+      },
+    Middle:{
+      alignItems:'center',
+      justifyContent:'center',
+      backgroundColor:'blue',
+    },
+    text2:{
+      flexDirection:'row',
+      justifyContent:'center',
+      paddingTop:5
+    },
+    signupText:{
+      fontWeight:'bold'
+    },
+    emailField:{
+      marginTop:30,
+      marginLeft:15
+    },
+    emailInput:{
+      marginTop:10,
+      marginRight:5
+    },
+    buttonStyle:{
+      marginTop:30,
+      marginLeft:15,
+      marginRight:15
+    },
+    buttonStyleX:{
+      marginTop:12,
+      marginLeft:15,
+      marginRight:15
+    },
+    buttonDesign:{
+      backgroundColor:'#026efd'
+    },
+    lineStyle:{
+      flexDirection:'row',
+      marginTop:30,
+      marginLeft:15,
+      marginRight:15,
+      alignItems:'center'
+    },
+    imageStyle:{
+      width:80,
+      height:80,
+      marginLeft:20,
+    },
+    menuStyle:{
+        width:500,
+        height:500,
+        marginLeft:20,
+      },
+    boxStyle:{
+      flexDirection:'row',
+      marginTop:100,
+      marginLeft:15,
+      marginRight:15,
+      justifyContent:'space-around',
+      borderRadius:2,
+      borderBlockColor:"grey"
+    },
+    homepageLink:{
+      fontWeight:'bold',
+      fontSize:30,
+      backgroundColor:'#026efd',
+      borderColor:'black',
+      borderWidth:2,
+      color:"white",
+      textAlign:'center'
+    },
+    titleText:{
+      fontWeight:'bold',
+      fontSize:30,
+      color:'white'
+    },
+    Welcome:{
+      fontSize:45,
+      textAlign:'center',
+      fontWeight:'bold',
+      color:'blue'
+    }
+  });
+  
