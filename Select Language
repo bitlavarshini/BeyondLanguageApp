@@ -1,0 +1,294 @@
+import { StatusBar } from 'expo-status-bar';
+import React, {useState} from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput} from 'react-native';
+import { Input, NativeBaseProvider, Button, Icon, Box, Image, AspectRatio } from 'native-base';
+// import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { FIREBASE_AUTH } from '../components/FirebaseConfig';
+import {getAuth, createUserWithEmailAndPassword} from "firebase/auth"
+import { ActivityIndicator } from 'react-native-web';
+
+
+function Signup(){
+  const navigation = useNavigation();
+
+  const [form, setForm] = useState({
+
+    email: '',
+    username: '', 
+    password: '', 
+    repeatPassword: ''
+
+  });
+
+  const auth = FIREBASE_AUTH; 
+  const [loading, SetLoading] = useState(false);
+
+
+  const SignUp = async () => {
+    SetLoading(true); 
+
+    try{
+      const response = await createUserWithEmailAndPassword(auth, form.email, form.password)
+      console.log(response)
+      alert("User Successfully signed up check your emails")
+    }
+    catch(error){
+      console.log(error);
+      alert("Sign in failed: "+error.message)
+    }
+    finally{
+      SetLoading(false);
+    }
+  }
+
+  return (
+
+  <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}> 
+    <View style={styles.container}>
+
+
+  
+        <View style={styles.header}>
+
+          <Image
+            alt="App Logo"
+            resizeMode="contain"
+            style={styles.headerImg}
+            source={require('../assets/logo.jpg')} 
+            />
+
+          <Text style={styles.title}>
+            Sign up to <Text style={{ color: '#075eec' }}>Beyond Language</Text>
+          </Text>
+
+          <Text style={styles.subtitle}>
+            Start Learning Spanish Today
+          </Text>
+
+        </View>
+
+        <View style={styles.form}>
+
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>UserName</Text>
+
+            <TextInput
+              autoCapitalize="none"
+              // autoCorrect={false}
+              // keyboardType="email-address"
+              onChangeText={username => setForm({ ...form, username })}
+              placeholder="username"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              value={form.username} />
+          </View>
+        <View style={styles.input}>
+          <Text style={styles.inputLabel}>Email</Text>
+
+          <TextInput
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="email-address"
+            onChangeText={email => setForm({ ...form, email })}
+            placeholder="john@example.com"
+            placeholderTextColor="#6b7280"
+            style={styles.inputControl}
+            value={form.email} />
+          </View>
+
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Password</Text>
+
+            <TextInput
+              autoCorrect={false}
+              onChangeText={password => setForm({ ...form, password })}
+              placeholder="********"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              secureTextEntry={true}
+              value={form.password} />
+          </View>
+
+          
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}> Repeat Password</Text>
+
+            <TextInput
+              autoCorrect={false}
+              onChangeText={repeatPassword => setForm({ ...form, repeatPassword })}
+              placeholder="********"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              secureTextEntry={true}
+              value={form.repeatPassword} />
+          </View>
+          { loading ? (<ActivityIndicator size="large" color="#0000ff"/>) :(
+          <View style={styles.formAction}>
+            <TouchableOpacity
+              onPress={() => {
+                // Section for implementing sign up
+              }
+              }>
+              <View style={styles.btn}>
+                <Text style={styles.btnText}>Sign Up</Text>
+              </View>
+            </TouchableOpacity>
+            </View>
+          )
+
+}
+          
+
+            <View style={styles.formAction}>
+
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Login')
+              }
+              }>
+              <View style={styles.btn}>
+                <Text style={styles.btnText}>Sign In</Text>
+              </View>
+            </TouchableOpacity>
+        
+          </View>
+
+  
+
+        </View>
+
+        </View>
+
+
+
+
+    </SafeAreaView>
+
+  )
+}
+
+
+const styles = StyleSheet.create({
+  container: {
+    paddingVertical: 15,
+    paddingHorizontal: 0,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#1D2A32',
+    marginBottom: 6,
+  },
+  subtitle: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#929292',
+    marginBottom:4
+  },
+  /** Header */
+  header: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 5,
+  },
+  headerImg: {
+    width: 80,
+    height: 80,
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+  /** Form */
+  form: {
+    marginBottom: 36,
+    paddingHorizontal: 24,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+  },
+  formAction: {
+    marginTop: 20,
+    marginBottom: 5,
+  },
+  formLink: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#075eec',
+    textAlign: 'center',
+  },
+  formFooter: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#222',
+    textAlign: 'center',
+    letterSpacing: 0.15,
+  },
+  /** Input */
+  input: {
+    marginBottom: 16,
+  },
+  inputLabel: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#222',
+    marginBottom: 8,
+  },
+  inputControl: {
+    height: 50,
+    backgroundColor: '#fff',
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#222',
+    borderWidth: 1,
+    borderColor: '#C9D3DB',
+    borderStyle: 'solid',
+  },
+  /** Button */
+  btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 30,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderWidth: 1,
+    backgroundColor: '#075eec',
+    borderColor: '#075eec',
+  },
+  btnText: {
+    fontSize: 18,
+    lineHeight: 26,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  backbtn:{
+    paddingHorizontal: 10, 
+    paddingVertical: 20 
+  
+  }, 
+  backtxt: {
+    fontSize: 12, 
+    fontWeight: '600', 
+    color: '#075eec'
+  }
+});
+
+
+
+
+export default () => {
+  return (
+    <NativeBaseProvider>
+     
+        <Signup />
+      
+    </NativeBaseProvider>
+  )
+}
+
+
