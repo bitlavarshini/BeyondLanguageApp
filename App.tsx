@@ -9,13 +9,7 @@ import Flashcard from './Flashcard'
 
 const firebaseConfig = {
   // Todo : Add Firebase Config
-  apiKey: "AIzaSyDEqdbd6EMmMgEQMhzvBL-PD87q-3XTDSA",
-                          authDomain: "beyondlanguageapp-421322.firebaseapp.com",
-                          projectId: "beyondlanguageapp-421322",
-                          storageBucket: "beyondlanguageapp-421322.appspot.com",
-                          messagingSenderId: "426969717416",
-                          appId: "1:426969717416:web:a4faf72b8235381bde009d",
-                          databaseUrl: "https://beyondlanguageapp-421322-default-rtdb.firebaseio.com/"
+  
 
 };
 
