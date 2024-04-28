@@ -1,0 +1,194 @@
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Image } from 'react-native'
+import React, {useState} from 'react'
+import { NativeBaseProvider } from 'native-base'
+import { useNavigation } from '@react-navigation/native';
+
+
+function Level2() {
+    const [isSpanish, setIsSpanish] = useState(true); 
+    const [isComplete, setIsComplete] = useState(false); 
+    const [clickedCabra, setClickedCabra] = useState(false); 
+    const [clickedOveja, setClickedOveja] = useState(false);
+
+    const navigation = useNavigation();
+
+    const translate = (word) => {
+
+        const translations = {
+            Cabra: "Goat", 
+            Oveja: "Sheep", 
+        }; 
+
+        return translations[word] || word; 
+    }; 
+    const handlePress = (word) => {
+        setIsSpanish(!isSpanish); 
+
+        if(word === 'Cabra'){
+            setClickedCabra(true); 
+
+        }
+        else if (word === 'Oveja'){
+            setClickedOveja(true);
+    
+
+        }
+
+        setIsComplete(true);
+
+    
+    };
+
+    
+
+
+  return (
+
+    <SafeAreaView style={{flex: 1, backgroundColor: '#e8ecf4'}}>
+    
+    <View style={styles.container}>
+    <View style={styles.header}>
+            <Image
+                alt="App Logo"
+                resizeMode="contain"
+                style={styles.headerImg}
+                source={require('../assets/logo.jpg')} 
+                />
+            <View >
+            <Text style={styles.title}>Beyond Language</Text>
+            </View>
+
+    </View>
+
+    <View >
+      <Text style={styles.subtitle}>Level 2</Text>
+    </View>
+
+    {/* Spanish buttons */}
+
+    <View style={styles.buttonContainer}>
+        <TouchableOpacity
+            style={[styles.btn, clickedCabra ? styles.btnClicked : styles.btn]}
+            onPress={() => handlePress('Cabra')}
+            activeOpacity={0.7}
+        >
+            <Text style={styles.btnText}>{clickedCabra ? translate('Cabra') : 'Cabra'}</Text>
+
+        </TouchableOpacity>
+
+        <TouchableOpacity
+            style={[styles.btn, clickedOveja ? styles.btnClicked : styles.btn]}
+            onPress={() => handlePress('Oveja')}
+            activeOpacity={0.7}
+           
+        >
+            <Text style={styles.btnText}>{clickedOveja ? translate('Oveja') : 'Oveja'}</Text>
+
+        </TouchableOpacity>
+
+    </View>
+
+    <TouchableOpacity
+         style={[styles.btnComplete, isComplete ? styles.enabledButton: styles.disabledButton]}
+         onPress={() => navigation.navigate('Proficiency')}
+         disabled={!isComplete}
+         activeOpacity={0.7}
+    >
+        <Text style={styles.btnText}>Complete Level</Text>
+    </TouchableOpacity>
+
+
+    </View>
+    </SafeAreaView>
+  )
+}
+
+const styles = StyleSheet.create({
+    container: {
+        paddingVertical: 24, 
+        paddingHorizontal: 0, 
+        flexGrow: 1, 
+        flexShrink: 1, 
+        flexBasis: 0
+    }, 
+    title: {
+        fontSize: 31, 
+        fontWeight: '700', 
+        color: '#1D2A32',
+        marginBottom: 6,
+    }, 
+    header: {
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        marginVertical: 18
+    }, 
+    headerImg: {
+        width: 40,
+        height: 40, 
+        alignSelf: 'center', 
+        marginBottom: 18
+    }, 
+    subtitle: {
+        fontSize: 24, 
+        fontWeight: '700', 
+        alignSelf: 'center', 
+        color: '#929292',
+        marginVertical: 15
+
+    }, 
+    buttonContainer: {
+        flexDirection: 'column', 
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    }, 
+    btn:{
+        borderRadius: 20,
+        paddingVertical: 40,
+        paddingHorizontal: 60,
+        borderWidth: 1,
+        backgroundColor: '#075eec',
+        borderColor: '#075eec',
+        marginBottom: 5
+
+    },
+    btnClicked: {
+        backgroundColor: '#5F9EA0',
+        borderColor: '#5F9EA0'
+    }, 
+    btnText:{
+        fontSize: 18,
+        lineHeight: 26,
+        fontWeight: '600',
+        color: '#fff',
+
+    }, 
+    enabledButton: {
+        backgroundColor: '#075eec'
+    }, 
+    disabledButton:{
+        backgroundColor: "#83aef5"
+    }, 
+    btnComplete: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 30,
+        paddingVertical: 10,
+        paddingHorizontal: 5,
+        borderWidth: 1,
+        backgroundColor: '#075eec',
+        borderColor: '#075eec',
+        marginTop: 50
+    }
+    
+})
+
+export default () => {
+
+return(
+<NativeBaseProvider>
+    <Level2 />
+</NativeBaseProvider>
+)
+
+}
