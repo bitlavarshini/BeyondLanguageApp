@@ -7,7 +7,6 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-
 function Proficiency() {
     const navigation = useNavigation();
   return (
@@ -29,41 +28,33 @@ function Proficiency() {
       </View>
       <View style={styles.form}>
         <View>
-         <Text style={styles.subtitle}>Levels</Text>
+         <Text style={styles.subtitle}>Select Your Proficiency Level</Text>
         </View>
 
-        <View style={styles.formAction}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Level1")
-              }>
-              <View style={styles.btn}>
-                <Text style={styles.btnText}>Level 1</Text>
-              </View>
-            </TouchableOpacity>
-        </View>
-
-        <View style={styles.formAction}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Level2")
-              }>
-              <View style={styles.btn}>
-                <Text style={styles.btnText}>Level 2</Text>
-              </View>
-            </TouchableOpacity>
-        </View>
-
-        
         <View style={styles.formAction}>
             <TouchableOpacity
               onPress={() => navigation.navigate("Questionnaire")
               }>
               <View style={styles.btn}>
-                <Text style={styles.btnText}>Start Quiz</Text>
+                <Text style={styles.btnText}>Beginner</Text>
               </View>
             </TouchableOpacity>
         </View>
 
-        {/* <View style={styles.formAction}>
+
+
+
+        <View style={styles.formAction}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Questionnaire")
+              }>
+              <View style={styles.btn}>
+                <Text style={styles.btnText}>Intermediate</Text>
+              </View>
+            </TouchableOpacity>
+        </View>
+
+        <View style={styles.formAction}>
             <TouchableOpacity
               onPress={() => navigation.navigate("Questionnaire")
               }>
@@ -71,7 +62,7 @@ function Proficiency() {
                 <Text style={styles.btnText}>Expert</Text>
               </View>
             </TouchableOpacity>
-        </View> */}
+        </View>
 
       </View>
 
