@@ -1,0 +1,198 @@
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Input, NativeBaseProvider, Button, Icon, Box, Image, AspectRatio } from 'native-base';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+
+
+
+function Proficiency() {
+    const navigation = useNavigation();
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
+
+    <View style={styles.container}>
+
+      <View style={styles.header}>
+        <Image
+            alt="App Logo"
+            resizeMode="contain"
+            style={styles.headerImg}
+            source={require('../assets/logo.jpg')} 
+            />
+        <View >
+          <Text style={styles.title}>Beyond Language</Text>
+        </View>
+
+      </View>
+      <View style={styles.form}>
+        <View>
+         <Text style={styles.subtitle}>Select Your Proficiency Level</Text>
+        </View>
+
+        <View style={styles.formAction}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Questionnaire")
+              }>
+              <View style={styles.btn}>
+                <Text style={styles.btnText}>Beginner</Text>
+              </View>
+            </TouchableOpacity>
+        </View>
+
+
+
+
+        <View style={styles.formAction}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Questionnaire")
+              }>
+              <View style={styles.btn}>
+                <Text style={styles.btnText}>Intermediate</Text>
+              </View>
+            </TouchableOpacity>
+        </View>
+
+        <View style={styles.formAction}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Questionnaire")
+              }>
+              <View style={styles.btn}>
+                <Text style={styles.btnText}>Expert</Text>
+              </View>
+            </TouchableOpacity>
+        </View>
+
+      </View>
+
+      
+
+      
+
+
+
+    </View>
+    
+    </SafeAreaView>
+    
+  )
+}
+export default () => {
+    return (
+      <NativeBaseProvider>
+       
+          <Proficiency />
+        
+      </NativeBaseProvider>
+    )
+  }
+  
+  
+  const styles = StyleSheet.create({
+    container: {
+      paddingVertical: 24,
+      paddingHorizontal: 0,
+      flexGrow: 1,
+      flexShrink: 1,
+      flexBasis: 0,
+    },
+    title: {
+      fontSize: 31,
+      fontWeight: '700',
+      color: '#1D2A32',
+      marginBottom: 6,
+    },
+    subtitle: {
+      fontSize: 18,
+      fontWeight: '700',
+      color: '#929292',
+      marginVertical: 20
+    },
+    header: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginVertical: 36,
+
+    },
+    headerImg: {
+      width: 80,
+      height: 80,
+      alignSelf: 'center',
+      marginBottom: 36,
+    },
+    form: {
+      marginBottom: 24,
+      paddingHorizontal: 24,
+      flexGrow: 1,
+      flexShrink: 1,
+      flexBasis: 0,
+
+    },formAction: {
+      marginTop: 4,
+      marginBottom: 16,
+    },
+    formLink: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: '#075eec',
+      textAlign: 'center',
+    },
+    formFooter: {
+      fontSize: 15,
+      fontWeight: '600',
+      color: '#222',
+      textAlign: 'center',
+      letterSpacing: 0.15,
+    },
+    /** Input */
+    input: {
+      marginBottom: 16,
+    },
+    inputLabel: {
+      fontSize: 17,
+      fontWeight: '600',
+      color: '#222',
+      marginBottom: 8,
+    },
+    inputControl: {
+      height: 50,
+      backgroundColor: '#fff',
+      paddingHorizontal: 16,
+      borderRadius: 12,
+      fontSize: 15,
+      fontWeight: '500',
+      color: '#222',
+      borderWidth: 1,
+      borderColor: '#C9D3DB',
+      borderStyle: 'solid',
+    },
+    /** Button */
+    btn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 30,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderWidth: 1,
+      backgroundColor: '#075eec',
+      borderColor: '#075eec',
+    },
+    btnText: {
+      fontSize: 18,
+      lineHeight: 26,
+      fontWeight: '600',
+      color: '#fff',
+    },
+    backbtn:{
+      paddingHorizontal: 10, 
+      paddingVertical: 20 
+    
+    }, 
+    backtxt: {
+      fontSize: 12, 
+      fontWeight: '600', 
+      color: '#075eec'
+    }
+  });
