@@ -9,6 +9,14 @@ import Flashcard from './Flashcard'
 
 const firebaseConfig = {
   // Todo : Add Firebase Config
+  apiKey: "AIzaSyDEqdbd6EMmMgEQMhzvBL-PD87q-3XTDSA",
+                          authDomain: "beyondlanguageapp-421322.firebaseapp.com",
+                          projectId: "beyondlanguageapp-421322",
+                          storageBucket: "beyondlanguageapp-421322.appspot.com",
+                          messagingSenderId: "426969717416",
+                          appId: "1:426969717416:web:a4faf72b8235381bde009d",
+                          databaseUrl: "https://beyondlanguageapp-421322-default-rtdb.firebaseio.com/"
+
 };
 
 const app = initializeApp(firebaseConfig);
@@ -294,26 +302,42 @@ const path = 'Users/' + subEmail;
               console.error('Error reading data:', error);
             });
   };
-
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button
-        title="Level1"
-        onPress={handleLevel1}
-      />
-      <Button
-        title="Level2"
-        onPress={handleLevel2}
-         disabled={trackLevel.level < 2}
-      />
-      <Button
-        title="Start Quiz"
-        onPress={handleQuiz}
-        disabled={trackLevel.level < 4}
-      />
-      <Button title="Track Progress" onPress={trackProgress} />
-    </View>
-  );
+   return (
+      <View style={styles.container}>
+        <Text style={styles.header}>Please Select Your Level</Text>
+        <TouchableOpacity style={styles.button} onPress={handleLevel1}>
+          <Text style={styles.buttonText}>Level 1</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, trackLevel.level < 2 && styles.disabledButton]} onPress={handleLevel2} disabled={trackLevel.level < 2}>
+          <Text style={styles.buttonText}>Level 2</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, trackLevel.level < 4 && styles.disabledButton]} onPress={handleQuiz} disabled={trackLevel.level < 4}>
+          <Text style={styles.buttonText}>Start Quiz</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={trackProgress}>
+          <Text style={styles.buttonText}>Track Progress</Text>
+        </TouchableOpacity>
+      </View>
+    );
+//   return (
+//     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+//       <Button
+//         title="Level1"
+//         onPress={handleLevel1}
+//       />
+//       <Button
+//         title="Level2"
+//         onPress={handleLevel2}
+//          disabled={trackLevel.level < 2}
+//       />
+//       <Button
+//         title="Start Quiz"
+//         onPress={handleQuiz}
+//         disabled={trackLevel.level < 4}
+//       />
+//       <Button title="Track Progress" onPress={trackProgress} />
+//     </View>
+//   );
 }
 
 function TrackProgress({ navigation }) {
@@ -408,20 +432,28 @@ const path = 'Users/' + subEmail;
       console.error('Error reading data:', error);
     });
   };
+  const numRows = Math.ceil(words.length / 2);
 
-    return (
-      <View>
-        {words.map(word => (
-          <Flashcard key={word.id} word={word.word} translation={word.translation} />
-        ))}
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <Button
-            title="Complete Level 1"
-            onPress={handleLevel}
-          />
-        </View>
-      </View>
+  // Create an array of arrays where each inner array represents a row of flashcards
+    const rows = Array.from({ length: numRows }, (_, index) =>
+        words.slice(index * 2, (index + 1) * 2)
     );
+return (
+    <View style={styles.container}>
+      {rows.map((row, rowIndex) => (
+        <View key={rowIndex} style={styles.row}>
+          {row.map(word => (
+            <Flashcard key={word.id} word={word.word} translation={word.translation} />
+          ))}
+        </View>
+      ))}
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.button} onPress={handleLevel}>
+            <Text style={styles.buttonText}>Complete Level 1</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 }
 
 function Level2({ navigation }) {
@@ -448,32 +480,31 @@ get(child(dbRef, `Users/${subEmail}`))
     console.error('Error reading data:', error);
   });
 };
+const numRows = Math.ceil(words.length / 2);
 
-    return (
-      <View>
-        {words.map(word => (
-                <Flashcard key={word.id} word={word.word} translation={word.translation} />
-        ))}
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <Button
-            title="Complete Level 2"
-            onPress={handleLevel}
-          />
-        </View>
-      </View>
+  // Create an array of arrays where each inner array represents a row of flashcards
+    const rows = Array.from({ length: numRows }, (_, index) =>
+        words.slice(index * 2, (index + 1) * 2)
     );
+return (
+    <View style={styles.container}>
+      {rows.map((row, rowIndex) => (
+        <View key={rowIndex} style={styles.row}>
+          {row.map(word => (
+            <Flashcard key={word.id} word={word.word} translation={word.translation} />
+          ))}
+        </View>
+      ))}
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.button} onPress={handleLevel}>
+            <Text style={styles.buttonText}>Complete Level 2</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 }
 
 let questions = [];
-
-get(child(dbRef, `Questions/`))
-  .then((snapshot) => {
-    questions = snapshot.val();
-  })
-  .catch((error) => {
-    console.error('Error reading data:', error);
-  });
-
 // const question = [
 //                         {
 //                           question: 'What does "Agua" mean in English?',
@@ -528,6 +559,16 @@ get(child(dbRef, `Questions/`))
 //                     ];
 //  set(ref(getDatabase(), 'Questions/'), question);
 
+get(child(dbRef, `Questions/`))
+  .then((snapshot) => {
+    questions = snapshot.val();
+  })
+  .catch((error) => {
+    console.error('Error reading data:', error);
+  });
+
+
+
 function Quiz({ navigation }) {
   const [quizCompleted, setQuizCompleted] = useState(false);
 
@@ -581,24 +622,32 @@ function Quiz({ navigation }) {
               }
             }, [quizCompleted]);
 
-  return (
-    <View>
+return (
+    <View style={styles.container}>
       {!quizCompleted ? (
         <View>
-          <Text>Question {currentQuestionIndex + 1}</Text>
-          <Text>{questions[currentQuestionIndex].question}</Text>
-          {questions[currentQuestionIndex].options.map((option, index) => (
-            <TouchableOpacity key={index} onPress={() => handleAnswer(option)}>
-              <Text>{option}</Text>
-            </TouchableOpacity>
-          ))}
-          <Button title="Back" onPress={handleLevels} />
+          <Text style={styles.questionNumber}>Question {currentQuestionIndex + 1}</Text>
+          <Text style={styles.questionText}>{questions[currentQuestionIndex].question}</Text>
+          <View style={styles.optionsContainer}>
+            {questions[currentQuestionIndex].options.map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.optionButton}
+                onPress={() => handleAnswer(option)}
+              >
+                <Text style={styles.optionText}>{option}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <TouchableOpacity style={styles.button} onPress={handleLevels}>
+                      <Text style={styles.buttonText}>Back</Text>
+          </TouchableOpacity>
         </View>
-        ) : (
-        <View>
-                                  <Text>Congratulations! You completed the quiz.</Text>
-                                  <Text>Your final score: {score}</Text>
-                                </View>
+      ) : (
+        <View style={styles.completedContainer}>
+          <Text style={styles.completedText}>Congratulations! You completed the quiz.</Text>
+          <Text style={styles.scoreText}>Your final score: {score}</Text>
+        </View>
       )}
     </View>
   );
@@ -646,6 +695,71 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
   },
+  header: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 24,
+    },
+    button: {
+      backgroundColor: '#8080ff',
+      paddingVertical: 12,
+      paddingHorizontal: 24,
+      borderRadius: 6,
+      marginVertical: 6,
+    },
+    buttonText: {
+      color: 'white',
+      fontSize: 18,
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+  disabledButton: {
+    backgroundColor: '#CCCCCC', // Lighter shade for disabled button
+  },
+  row: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      width: '100%',
+      marginBottom: 20,
+    },
+    questionNumber: {
+        fontSize: 20,
+        marginBottom: 10,
+      },
+      questionText: {
+        fontSize: 18,
+        marginBottom: 20,
+        textAlign: 'center',
+      },
+      optionsContainer: {
+        width: '100%',
+        alignItems: 'center',
+      },
+      optionButton: {
+        backgroundColor: '#4CAF50',
+        paddingVertical: 12,
+        paddingHorizontal: 24,
+        borderRadius: 6,
+        marginVertical: 6,
+      },
+      optionText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
+      completedContainer: {
+        alignItems: 'center',
+      },
+      completedText: {
+        fontSize: 20,
+        marginBottom: 10,
+        textAlign: 'center',
+      },
+      scoreText: {
+        fontSize: 18,
+        textAlign: 'center',
+      },
 });
 
 export default App;

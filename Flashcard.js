@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   card: {
     position: 'absolute',
-    width: '100%',
+    width: '90%',
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
