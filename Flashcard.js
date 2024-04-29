@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   card: {
     position: 'absolute',
-    width: '100%',
+    width: '90%',
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -63,19 +63,19 @@ const styles = StyleSheet.create({
     backfaceVisibility: 'hidden',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#c87449',
   },
   frontCard: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#efd8cc',
   },
   backCard: {
-    backgroundColor: '#28a745',
+    backgroundColor: '#c87449',
     transform: [{ rotateY: '180deg' }],
   },
   word: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'white',
+    color: 'black',
   },
   translation: {
     fontSize: 16,
