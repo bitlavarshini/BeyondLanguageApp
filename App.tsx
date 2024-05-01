@@ -23,7 +23,7 @@ import { getDatabase, ref, get, child, set, onValue } from "firebase/database";
 import Flashcard from "./Flashcard";
 
 const firebaseConfig = {
-  // ToDo: Add Firebase Config
+  // Firebase Configuration
 };
 
 const app = initializeApp(firebaseConfig);
